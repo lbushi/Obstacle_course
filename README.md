@@ -11,3 +11,5 @@ Obstacles are visually represented as rectangles with varying widths and heights
 The game can be paused with the P button.
 
 In order to get the code running on your setup, you must first set up GLAD to get the function pointers that will ultimately instruct the GPU to draw stuff on the screen and you will need to set up GLFW library to create a window. Then simply put the header files that appear in my code in the include  directories of the project and also make sure to include glfw3.lib(found in the zip folder when you download GLFW) and include opengl32.lib(should be already in your computer). Finally, download the glm math library and set the corresponding include directories and .lib files to finish everything.  If you cant set it up, you might want to check out LearnOpenGL.com website which has probably the best tutorials on OpenGL out there and you can also find how to set up the project properly with GLAD, GLFW and glm.
+
+The game is in no way perfect or complete and if you notice anything that you have the time, will and energy to improve, please do so.
