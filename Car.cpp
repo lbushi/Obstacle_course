@@ -51,8 +51,8 @@ glm::vec3 Car::get_direction() const
 }
 
 void Car::set_direction(glm::vec3 new_dir) {
-	new_dir.x = glm::min(3.0f - bottom_back_coords.x, new_dir.x);
-	new_dir.x = glm::max(-5.0f - bottom_back_coords.x, new_dir.x);
+	new_dir.x = glm::min((3.0f - bottom_back_coords.x) / speed, new_dir.x);
+	new_dir.x = glm::max((-5.0f - bottom_back_coords.x) / speed, new_dir.x);
 	direction = new_dir;
 }
 
