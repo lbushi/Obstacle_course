@@ -46,6 +46,8 @@ Shader::Shader(const char* vertexShaderSource, const char* fragmentShaderSource)
 	glAttachShader(shaderID, vertex_shader);
 	glAttachShader(shaderID, fragment_shader);
 	glLinkProgram(shaderID);
+	glDeleteShader(vertex_shader);
+	glDeleteShader(fragment_shader);
 	GLint success;
 	char infoLog[512];
 	glGetProgramiv(shaderID, GL_LINK_STATUS, &success);
@@ -59,6 +61,10 @@ void Shader::use() const
 {
 	glUseProgram(shaderID);
 }
+unsigned int Shader::getID() const {
+	return shaderID;
+}
+
 void Shader::setMatrix4(const glm::mat4& mat, const char* name)
 {
 	use();
@@ -69,6 +75,45 @@ void Shader::setFloat(const float brightness, const char* name)
 	use();
 	glUniform1f(glGetUniformLocation(shaderID, name), brightness);
 }
+
+void Shader::setBool(const std::string& name, bool value) const
+{
+	use();
+	glUniform1i(glGetUniformLocation(shaderID, name.c_str()), (int)value);
+}
+// ------------------------------------------------------------------------
+void Shader::setInt(const std::string& name, int value) const
+{
+	use();
+	glUniform1i(glGetUniformLocation(shaderID, name.c_str()), value);
+}
+// ------------------------------------------------------------------------
+
+// ------------------------------------------------------------------------
+void Shader::setVec2(const std::string& name, const glm::vec2& value) const
+{
+	use();
+	glUniform2fv(glGetUniformLocation(shaderID, name.c_str()), 1, &value[0]);
+}
+void Shader::setVec2(const std::string& name, float x, float y) const
+{
+	use();
+	glUniform2f(glGetUniformLocation(shaderID, name.c_str()), x, y);
+}
+// ------------------------------------------------------------------------
+void Shader::setVec3(const std::string& name, const glm::vec3& value) const
+{
+	use();
+	glUniform3fv(glGetUniformLocation(shaderID, name.c_str()), 1, &value[0]);
+}
+
+void Shader::setVec4(const std::string& name, const glm::vec4& value) const
+{
+	use();
+	glUniform4fv(glGetUniformLocation(shaderID, name.c_str()), 1, &value[0]);
+}
+
+
 Shader::~Shader() {
 	glDeleteProgram(shaderID);
 }

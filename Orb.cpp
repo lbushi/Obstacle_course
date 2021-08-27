@@ -17,7 +17,7 @@ Orb::Orb(float* vertices, unsigned int vertices_size, Shader* shader, float z, f
 
 void Orb::draw()
 {
-	brightness += 0.01f;
+	brightness += 0.004f;
 	glBindVertexArray(vao);
 	shader->use();
 	shader->setFloat(brightness, "brightness");

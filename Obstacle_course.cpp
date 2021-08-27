@@ -1,4 +1,5 @@
-#define STB_IMAGE_IMPLEMENTATION
+// TODO: Create a class that handles textures
+#define LAYOUT33 int layout33[] = { 2, 3, 3 };
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <glm/gtc/matrix_transform.hpp>
@@ -8,12 +9,12 @@
 #include "Shader.h"
 #include "Camera.h"
 #include "Car.h"
-#include "stbi_image.h"
 #include "Environment.h"
 #include "Obstacle.h"
 #include <random>
 #include <ctime>
 #include "Orb.h"
+#include "C:\Users\l84189252\source\repos\OpenGL_game\OpenGL_game\Texture.h"
 using namespace std;
 const unsigned int SCR_WIDTH = 800;
 const unsigned int SCR_HEIGHT = 600;
@@ -99,8 +100,9 @@ int main()
     glm::mat4 model = glm::mat4(1.0f);
     glm::mat4 projection = glm::perspective(glm::radians(45.0f), 4.0f / 3.0f, 0.1f, 16000.0f);
     glm::mat4 view = glm::mat4(1.0f);
-    Shader program = Shader("C:\\Users\\LBUSHI\\source\\repos\\Racing_Game\\Racing_Game\\VertexShader.txt", "C:\\Users\\LBUSHI\\source\\repos\\Racing_Game\\Racing_Game\\FragmentShader.txt");
+    Shader program = Shader("C:\\Users\\l84189252\\Downloads\\Obstacle_course-master\\Obstacle_course-master\\VertexShader.txt", "C:\\Users\\l84189252\\Downloads\\Obstacle_course-master\\Obstacle_course-master\\FragmentShader.txt");
     vector<Shape> stripes;
+    LAYOUT33
     for (int i = 0; i < 100; ++i) {
         float vertices[] = {
             -1.0f, -4.0f, -160 * i - 0.1f, 0.0f, 0.0f, 0.0f,
@@ -110,7 +112,8 @@ int main()
             1.0f, -4.0f, -160 * i - 0.1f, 0.0f, 0.0f, 0.0f,
             -1.0f, -4.0f, -160 * i - 0.1f, 0.0f, 0.0f, 0.0f
         };
-        stripes.emplace_back(Shape(vertices, sizeof(vertices), &program));
+        //int vertex_info[] = { 3, 3 };
+        stripes.emplace_back(Shape(vertices, layout33 + 1 , layout33[0], 6, &program));
     }
     float vertices[] = {
         -5.0f, -4.0f, -0.1f, 1.0f, 1.0f, 1.0f,
@@ -120,7 +123,7 @@ int main()
        5.0f, -4.0f, -0.1f, 1.0f, 1.0f, 1.0f,
         -5.0f, -4.0f, -0.1f, 1.0f, 1.0f, 1.0f
     };
-    Shape shape = Shape(vertices, sizeof(vertices), &program);
+    Shape shape = Shape(vertices, layout33+1, layout33[0], 6, &program);
     float car_vertices[] = {
         -1.0f, -4.0f, -5.0f , 1.0f, 0.0f, 0.0f,
         -1.0f, -4.0f, -7.0f , 1.0f, 0.0f, 0.0f,
@@ -159,7 +162,7 @@ int main()
         1.0f, -4.0f, -7.0f, 1.0f, 0.0f, 0.0f,
         -1.0f, -4.0f, -7.0f , 1.0f, 0.0f, 0.0f,
     };
-    Car car = Car(2.0f, 0.0f, car_vertices, sizeof(car_vertices), car_direction, &program);
+    Car car = Car(0.3f, 0.0f, car_vertices, sizeof(car_vertices), car_direction, &program);
     car.attach_Observer(&camera);
     vector<Obstacle> obstacles;
     for (int i = 1; i <= obstacle_number; ++i) {
@@ -235,11 +238,9 @@ int main()
         1.0f, -1.0f, -1.0f,  1.0f, 0.0f,
         -1.0f, -1.0f, -1.0f,  0.0f, 0.0f
     };
-    stbi_set_flip_vertically_on_load(1);
-    int width, height, channels;
-    unsigned char* env_data = stbi_load("C:\\Users\\LBUSHI\\source\\repos\\Racing_Game\\Racing_Game\\nebula.jpg", &width, &height, &channels, 0);
-    Shader env_program = Shader("C:\\Users\\LBUSHI\\source\\repos\\Racing_Game\\Racing_Game\\EnvVertexShader.txt", "C:\\Users\\LBUSHI\\source\\repos\\Racing_Game\\Racing_Game\\EnvFragmentShader.txt");
-    Environment env = Environment(env_vertices, sizeof(env_vertices), env_data, width, height, &env_program);
+    Texture2d tex{ "C:\\Users\\l84189252\\Downloads\\Obstacle_course-master\\Obstacle_course-master\\nebula.jpg" };
+    Shader env_program = Shader("C:\\Users\\l84189252\\Downloads\\Obstacle_course-master\\Obstacle_course-master\\EnvVertexShader.txt", "C:\\Users\\l84189252\\Downloads\\Obstacle_course-master\\Obstacle_course-master\\EnvFragmentShader.txt");
+    Environment env = Environment(env_vertices, sizeof(env_vertices), tex.getID(), &env_program);
     program.setFloat(0.0f, "brightness");
     while (!glfwWindowShouldClose(window)) {
         glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
